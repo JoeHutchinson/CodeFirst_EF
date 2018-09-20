@@ -1,20 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Diagnostics;
+using CodeFirst_EF.DbContexts;
+using CodeFirst_EF.DTOs;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
+
 namespace CodeFirst_EF
 {
+    /// <summary>
+    /// Models a persistence layer using EF Code First approach alongside Database Migrations in manual mode (the only way to support Always Enabled 
+    /// with Code First approach). Additionally runs Entity Framework Extensions to provide performant bulk operations.
+    /// 
+    /// To enable migrations run the following from Package Manager Console
+    /// enable-migrations
+    /// </summary>
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome");
+            Console.WriteLine(@"Welcome");
 
-            using (var context = new CountVonCountDBContext())
+            using (var context = new CountVonCountDbContext())
             {
                 foreach (var wordMetric in context.WordMetrics)
                 {
@@ -22,17 +32,39 @@ namespace CodeFirst_EF
                 }
             }
 
-            Console.WriteLine("Do Bulk Insert");
-            var entities = CreateWords(100);
+            DoBulkInsertUsingExtension();
+
+
+            Console.ReadLine();
+        }
+
+        private static void DoBulkInsertUsingExtension()
+        {
+            Console.WriteLine(@"Do Bulk Insert");
+            var entities = CreateWords(1);
             var stopwatch = Stopwatch.StartNew();
-            using (var context = new CountVonCountDBContext())
+            using (var context = new CountVonCountDbContext())
             {
-                context.BulkInsert(entities, options => { options.BatchSize = 10; });
+                context.BulkInsert(entities);
             }
+
             stopwatch.Stop();
 
-            Console.WriteLine($"Done in {stopwatch.ElapsedMilliseconds}ms");
-            Console.ReadLine();
+            Console.WriteLine($@"Done in {stopwatch.ElapsedMilliseconds}ms");
+        }
+
+        private void DoBulkInsertUsingSqlBulkCopy()
+        {
+            using (var connection =
+                new SqlConnection(ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"].ConnectionString))
+            {
+                var transaction = connection.BeginTransaction();
+                using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+                {
+                    //blk.WriteToServer();
+                }
+            }
+            
         }
 
         private static IEnumerable<WordMetric> CreateWords(int num)
@@ -42,52 +74,6 @@ namespace CodeFirst_EF
                 var word = Any.String(10);
                 yield return new WordMetric(word, word, 3);
             }
-        }
-    }
-
-    public class CountVonCountDBContext : DbContext
-    {
-        public CountVonCountDBContext() : base("CountVonCountDBConnectionString")
-        {
-            Database.SetInitializer(new CountVonCountDbInitializer());
-        }
-
-        public DbSet<WordMetric> WordMetrics { get; set; }
-    }
-
-    public class CountVonCountDbInitializer : DropCreateDatabaseIfModelChanges<CountVonCountDBContext>
-    {
-        protected override void Seed(CountVonCountDBContext context)
-        {
-            // seed the DB
-            context.WordMetrics.Add(new WordMetric("hashed1", "Vauxhall", 8));
-            context.WordMetrics.Add(new WordMetric("hashed2", "Vauxhall", 5));
-            context.WordMetrics.Add(new WordMetric("hashed3", "Bmw", 3));
-            
-            base.Seed(context);
-        }
-    }
-
-    public class WordMetric
-    {
-        public WordMetric() { }
-        public WordMetric(string id, string word, int count)
-        {
-            Id = id;
-            Word = word;
-            Count = count;
-        }
-
-        [Key]
-        public string Id { get; set; }
-
-        public string Word { get; set; }
-
-        public int Count { get; set; }
-
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}, {nameof(Word)}: {Word}, {nameof(Count)}: {Count}";
         }
     }
 }
