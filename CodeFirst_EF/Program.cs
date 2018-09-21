@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
+using CodeFirst_EF.Security;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
-
 
 namespace CodeFirst_EF
 {
@@ -27,6 +27,14 @@ namespace CodeFirst_EF
         {
             Console.WriteLine(@"Welcome");
 
+            var hash = PasswordStorage.CreateHash("theseTimesTryMensSouls");
+            Console.WriteLine(PasswordStorage.VerifyPassword("theseTimesTryMensSouls", hash));
+
+            Console.ReadLine();
+        }
+
+        private static void DBInteraction()
+        {
             var connString = ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"]
                 .ConnectionString;
 
@@ -64,18 +72,17 @@ namespace CodeFirst_EF
                 var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
 
                 Expression<Func<WordMetric, bool>> where = wordM => wordM.Count > 10;
-                Func<IQueryable<WordMetric>, IOrderedQueryable<WordMetric>> orderBy = entities => entities.OrderByDescending(x => x.Count);
+                Func<IQueryable<WordMetric>, IOrderedQueryable<WordMetric>> orderBy = entities =>
+                    entities.OrderByDescending(x => x.Count);
                 const int take = 100;
 
-                var results = persist.Get(where, orderBy, take);
+                var results = persist.Get(@where, orderBy, take);
 
                 foreach (var result in results)
                 {
                     Console.WriteLine($@"repo : {result}");
                 }
             }
-
-            Console.ReadLine();
         }
 
         public static IEnumerable<WordMetric> CreateWords(int num)
