@@ -50,6 +50,9 @@
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
     </Reference>
+    <Reference Include="FastMember, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.4.1\lib\net461\FastMember.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions, Version=5.4.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.5.4.2\lib\net47\FluentAssertions.dll</HintPath>
     </Reference>
@@ -86,9 +89,11 @@
     <Compile Include="DbContexts\CountVonCountDbContext.cs" />
     <Compile Include="DbInitializers\CountVonCountDropDbInitializer.cs" />
     <Compile Include="DbInitializers\CountVonCountMigrateDbInitializer.cs" />
-    <Compile Include="Migrations\201809202112428_InitialCreate.cs" />
-    <Compile Include="Migrations\201809202112428_InitialCreate.Designer.cs">
-      <DependentUpon>201809202112428_InitialCreate.cs</DependentUpon>
+    <Compile Include="DTOs\TmpWordMetric.cs" />
+    <Compile Include="IPersistor.cs" />
+    <Compile Include="Migrations\201809210808251_InitialCreate.cs" />
+    <Compile Include="Migrations\201809210808251_InitialCreate.Designer.cs">
+      <DependentUpon>201809210808251_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
@@ -96,14 +101,15 @@
     <Compile Include="DTOs\WordMetric.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809202112428_InitialCreate.resx">
-      <DependentUpon>201809202112428_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809210808251_InitialCreate.resx">
+      <DependentUpon>201809210808251_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

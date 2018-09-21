@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Linq;
 using CodeFirst_EF.DbContexts;
 using CodeFirst_EF.DTOs;
+using FastMember;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
@@ -17,6 +20,8 @@ namespace CodeFirst_EF
     /// 
     /// To enable migrations run the following from Package Manager Console
     /// enable-migrations
+    /// 
+    /// BulkCopy used to insert into Always Encrypted table.
     /// </summary>
     class Program
     {
@@ -26,16 +31,42 @@ namespace CodeFirst_EF
 
             using (var context = new CountVonCountDbContext())
             {
+                Console.WriteLine(@"Word Metrics");
                 foreach (var wordMetric in context.WordMetrics)
+                {
+                    Console.WriteLine(wordMetric);
+                }
+
+                Console.WriteLine(@"Tmp Metrics");
+                foreach (var wordMetric in context.TmpWordMetrics)
                 {
                     Console.WriteLine(wordMetric);
                 }
             }
 
-            DoBulkInsertUsingExtension();
+            DoBulkMerge();
 
+            Console.WriteLine(@"Complete");
+
+            using (var context = new CountVonCountDbContext())
+            {
+                foreach (var wordMetric in context.WordMetrics.AsNoTracking().OrderByDescending(w => w.Count).Take(100))
+                {
+                    Console.WriteLine(wordMetric);
+                }
+            }
 
             Console.ReadLine();
+        }
+
+        private static void DoBulkMerge()
+        {
+            using (var context = new CountVonCountDbContext())
+            {
+                context.Database.ExecuteSqlCommand("exec p_MergeIntoWordMetrics");
+                context.SaveChanges();
+
+            }
         }
 
         private static void DoBulkInsertUsingExtension()
@@ -53,21 +84,26 @@ namespace CodeFirst_EF
             Console.WriteLine($@"Done in {stopwatch.ElapsedMilliseconds}ms");
         }
 
-        private void DoBulkInsertUsingSqlBulkCopy()
+        private static void DoBulkInsertUsingSqlBulkCopy<T>(string tableName) where T : class
         {
+            var entities = CreateWords(1000);
+
             using (var connection =
                 new SqlConnection(ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"].ConnectionString))
             {
-                var transaction = connection.BeginTransaction();
+                connection.Open();
+                using(var transaction = connection.BeginTransaction())
                 using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+                using (var reader = ObjectReader.Create(entities, typeof(T).GetProperties().Select(p => p.Name).ToArray()))
                 {
-                    //blk.WriteToServer();
+                    bulkCopy.DestinationTableName = tableName;
+                    bulkCopy.WriteToServer(reader);
+                    transaction.Commit();
                 }
             }
-            
         }
 
-        private static IEnumerable<WordMetric> CreateWords(int num)
+        public static IEnumerable<WordMetric> CreateWords(int num)
         {
             for (var i = 0; i < num; i++)
             {

@@ -9,8 +9,11 @@ namespace CodeFirst_EF.DbContexts
         public CountVonCountDbContext() : base("CountVonCountDBConnectionString")
         {
             Database.SetInitializer(new CountVonCountMigrateDbInitializer());
+            //Database.SetInitializer(new CountVonCountDropDbInitializer());
         }
 
         public DbSet<WordMetric> WordMetrics { get; set; }
+
+        public DbSet<TmpWordMetric> TmpWordMetrics { get; set; }
     }
 }

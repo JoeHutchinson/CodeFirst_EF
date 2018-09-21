@@ -2,11 +2,11 @@
 
 namespace CodeFirst_EF.DTOs
 {
-    public class WordMetric
+    public class TmpWordMetric  //Could remove this
     {
-        public WordMetric() { }
+        public TmpWordMetric() { }
 
-        public WordMetric(string id, string word, int count)
+        public TmpWordMetric(string id, string word, int count)
         {
             Id = id;
             Word = word;
