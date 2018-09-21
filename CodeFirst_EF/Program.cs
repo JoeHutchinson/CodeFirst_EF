@@ -5,8 +5,10 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using CodeFirst_EF.DbContexts;
 using CodeFirst_EF.DTOs;
+using CodeFirst_EF.Persistence;
 using FastMember;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
@@ -54,6 +56,25 @@ namespace CodeFirst_EF
                 {
                     Console.WriteLine(wordMetric);
                 }
+            }
+
+            using (var context = new CountVonCountDbContext())
+            {
+                var connString = ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"]
+                    .ConnectionString;
+                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+
+                Expression<Func<WordMetric, bool>> where = wordM => wordM.Count > 10;
+                Func<IQueryable<WordMetric>, IOrderedQueryable<WordMetric>> orderBy = entities => entities.OrderByDescending(x => x.Count);
+                const int take = 100;
+
+                var results = persist.Get(where, orderBy, take);
+
+                foreach (var result in results)
+                {
+                    Console.WriteLine($@"repo : {result}");
+                }
+
             }
 
             Console.ReadLine();

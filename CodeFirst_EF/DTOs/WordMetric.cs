@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CodeFirst_EF.Persistence;
 
 namespace CodeFirst_EF.DTOs
 {
-    public class WordMetric
+    public class WordMetric : IEntity
     {
         public WordMetric() { }
 

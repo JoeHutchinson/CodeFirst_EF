@@ -90,7 +90,7 @@
     <Compile Include="DbInitializers\CountVonCountDropDbInitializer.cs" />
     <Compile Include="DbInitializers\CountVonCountMigrateDbInitializer.cs" />
     <Compile Include="DTOs\TmpWordMetric.cs" />
-    <Compile Include="IPersistor.cs" />
+    <Compile Include="Persistence\IRepository.cs" />
     <Compile Include="Migrations\201809210808251_InitialCreate.cs" />
     <Compile Include="Migrations\201809210808251_InitialCreate.Designer.cs">
       <DependentUpon>201809210808251_InitialCreate.cs</DependentUpon>
