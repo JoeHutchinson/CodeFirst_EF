@@ -12,6 +12,8 @@ namespace CodeFirst_EF.DbContexts
             //Database.SetInitializer(new CountVonCountDropDbInitializer());
         }
 
+        protected CountVonCountDbContext(string connectionString) : base(connectionString) { }
+
         public DbSet<WordMetric> WordMetrics { get; set; }
 
         public DbSet<TmpWordMetric> TmpWordMetrics { get; set; }

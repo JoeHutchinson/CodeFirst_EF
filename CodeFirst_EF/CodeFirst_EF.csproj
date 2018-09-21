@@ -87,10 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContexts\CountVonCountDbContext.cs" />
-    <Compile Include="DbInitializers\CountVonCountDropDbInitializer.cs" />
     <Compile Include="DbInitializers\CountVonCountMigrateDbInitializer.cs" />
     <Compile Include="DTOs\TmpWordMetric.cs" />
     <Compile Include="Repositories\EntityFrameworkRepository.cs" />
+    <Compile Include="Repositories\IEntity.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Migrations\201809210808251_InitialCreate.cs" />
     <Compile Include="Migrations\201809210808251_InitialCreate.Designer.cs">
@@ -100,7 +100,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DTOs\WordMetric.cs" />
-    <Compile Include="Security\Hash.cs" />
+    <Compile Include="Security\PBKDF2Provider.cs" />
+    <Compile Include="Security\IHashProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -5,12 +5,13 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using CodeFirst_EF.DbContexts;
+using CodeFirst_EF.Security;
 using FastMember;
 
 namespace CodeFirst_EF.Repositories
 {
     /// <summary>
-    /// Generic SQL repository with a flexible Get method and performance optimised Upsert
+    /// Generic EF repository with a flexible Get method and performance optimised Upsert
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     public class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()
@@ -18,7 +19,7 @@ namespace CodeFirst_EF.Repositories
         private readonly string _connectionString;
         private readonly TContext _context;
 
-        public EntityFrameworkRepository(string connectionString, TContext context)
+        public EntityFrameworkRepository(string connectionString, TContext context, IHashProvider hashProvider = null)
         {
             _connectionString = connectionString;
             _context = context;

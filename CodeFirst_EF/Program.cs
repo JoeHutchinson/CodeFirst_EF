@@ -27,8 +27,9 @@ namespace CodeFirst_EF
         {
             Console.WriteLine(@"Welcome");
 
-            var hash = PasswordStorage.CreateHash("theseTimesTryMensSouls");
-            Console.WriteLine(PasswordStorage.VerifyPassword("theseTimesTryMensSouls", hash));
+            var pbkdf2Provider = new PBKDF2Provider();
+            var hashResult = pbkdf2Provider.CreateHash("theseTimesTryMensSouls");
+            Console.WriteLine(pbkdf2Provider.VerifyPassword("theseTimesTryMensSouls", hashResult.Hash, hashResult.Salt));
 
             Console.ReadLine();
         }
@@ -72,11 +73,10 @@ namespace CodeFirst_EF
                 var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
 
                 Expression<Func<WordMetric, bool>> where = wordM => wordM.Count > 10;
-                Func<IQueryable<WordMetric>, IOrderedQueryable<WordMetric>> orderBy = entities =>
-                    entities.OrderByDescending(x => x.Count);
+                IOrderedQueryable<WordMetric> OrderBy(IQueryable<WordMetric> entities) => entities.OrderByDescending(x => x.Count);
                 const int take = 100;
 
-                var results = persist.Get(@where, orderBy, take);
+                var results = persist.Get(@where, OrderBy, take);
 
                 foreach (var result in results)
                 {

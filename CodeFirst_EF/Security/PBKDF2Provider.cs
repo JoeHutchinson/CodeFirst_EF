@@ -21,11 +21,23 @@ namespace CodeFirst_EF.Security
             : base(message, inner) { }
     }
 
+    public sealed class HashResult
+    {
+        public string Hash;
+        public string Salt;
+
+        public HashResult(string hash, string salt)
+        {
+            Hash = hash;
+            Salt = salt;
+        }
+    }
+
     /// <summary>
     /// Taken from https://github.com/defuse/password-hashing used as proof of concept of hashing not to be considered
     /// secure. Modified to allow separate storage of salt from hash to allow for use of same salt for a known word
     /// </summary>
-    internal sealed class PasswordStorage
+    internal sealed class PBKDF2Provider : IHashProvider
     {
         // These constants may be changed without breaking existing hashes.
         public const int SALT_BYTES = 24;
@@ -33,54 +45,59 @@ namespace CodeFirst_EF.Security
         public const int PBKDF2_ITERATIONS = 64000;
 
         // These constants define the encoding and may not be changed.
-        public const int HASH_SECTIONS = 5;
+        public const int HASH_SECTIONS = 4;
         public const int HASH_ALGORITHM_INDEX = 0;
         public const int ITERATION_INDEX = 1;
         public const int HASH_SIZE_INDEX = 2;
-        public const int SALT_INDEX = 3;
-        public const int PBKDF2_INDEX = 4;
+        public const int PBKDF2_INDEX = 3;
 
-        public static string CreateHash(string password)
+        public HashResult CreateHash(string password, string suppliedSalt = null)
         {
-            // Generate a random salt
             var salt = new byte[SALT_BYTES];
-            try
+            if (suppliedSalt == null)
             {
-                using (var csprng = new RNGCryptoServiceProvider())
+                // Generate a random salt
+                try
                 {
-                    csprng.GetBytes(salt);
+                    using (var csprng = new RNGCryptoServiceProvider())
+                    {
+                        csprng.GetBytes(salt);
+                    }
+                }
+                catch (CryptographicException ex)
+                {
+                    throw new CannotPerformOperationException(
+                        "Random number generator not available.",
+                        ex
+                    );
+                }
+                catch (ArgumentNullException ex)
+                {
+                    throw new CannotPerformOperationException(
+                        "Invalid argument given to random number generator.",
+                        ex
+                    );
                 }
             }
-            catch (CryptographicException ex)
+            else
             {
-                throw new CannotPerformOperationException(
-                    "Random number generator not available.",
-                    ex
-                );
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new CannotPerformOperationException(
-                    "Invalid argument given to random number generator.",
-                    ex
-                );
+                salt = Convert.FromBase64String(suppliedSalt);
             }
 
-            byte[] hash = PBKDF2(password, salt, PBKDF2_ITERATIONS, HASH_BYTES);
+            var hash = PBKDF2(password, salt, PBKDF2_ITERATIONS, HASH_BYTES);
 
             // format: algorithm:iterations:hashSize:salt:hash
-            String parts = "sha1:" +
+            var parts = "sha1:" +
                 PBKDF2_ITERATIONS +
                 ":" +
                 hash.Length +
                 ":" +
-                Convert.ToBase64String(salt) +
-                ":" +
                 Convert.ToBase64String(hash);
-            return parts;
+            
+            return new HashResult(parts, Convert.ToBase64String(salt)); ;
         }
 
-        public static bool VerifyPassword(string password, string goodHash)
+        public bool VerifyPassword(string password, string goodHash, string goodSalt)   //TODO: Move method to test class
         {
             char[] delimiter = { ':' };
             var split = goodHash.Split(delimiter);
@@ -137,7 +154,7 @@ namespace CodeFirst_EF.Security
             byte[] salt;
             try
             {
-                salt = Convert.FromBase64String(split[SALT_INDEX]);
+                salt = Convert.FromBase64String(goodSalt);
             }
             catch (ArgumentNullException ex)
             {

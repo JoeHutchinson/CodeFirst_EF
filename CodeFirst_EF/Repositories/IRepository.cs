@@ -19,11 +19,4 @@ namespace CodeFirst_EF.Repositories
 
         void Upsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity;
     }
-
-    public interface IEntity
-    {
-        string Id { get; set; }
-        string Word { get; set; }
-        int Count { get; set; }
-    }
 }
