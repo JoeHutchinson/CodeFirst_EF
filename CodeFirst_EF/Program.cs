@@ -1,15 +1,11 @@
-﻿using System;
+﻿using CodeFirst_EF.DbContexts;
+using CodeFirst_EF.DTOs;
+using CodeFirst_EF.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using CodeFirst_EF.DbContexts;
-using CodeFirst_EF.DTOs;
-using CodeFirst_EF.Persistence;
-using FastMember;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
@@ -31,37 +27,40 @@ namespace CodeFirst_EF
         {
             Console.WriteLine(@"Welcome");
 
+            var connString = ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"]
+                .ConnectionString;
+
+            // Initial read
             using (var context = new CountVonCountDbContext())
             {
+                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+
                 Console.WriteLine(@"Word Metrics");
-                foreach (var wordMetric in context.WordMetrics)
+                foreach (var result in persist.Get<WordMetric>())
                 {
-                    Console.WriteLine(wordMetric);
+                    Console.WriteLine(result);
                 }
 
                 Console.WriteLine(@"Tmp Metrics");
-                foreach (var wordMetric in context.TmpWordMetrics)
+                foreach (var wordMetric in persist.Get<TmpWordMetric>())
                 {
                     Console.WriteLine(wordMetric);
                 }
             }
 
-            DoBulkMerge();
+            // Write
+            using (var context = new CountVonCountDbContext())
+            {
+                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+                repository.Upsert<WordMetric>(CreateWords(5));
+                context.SaveChanges();
+            }
 
             Console.WriteLine(@"Complete");
 
+            // Assert
             using (var context = new CountVonCountDbContext())
             {
-                foreach (var wordMetric in context.WordMetrics.AsNoTracking().OrderByDescending(w => w.Count).Take(100))
-                {
-                    Console.WriteLine(wordMetric);
-                }
-            }
-
-            using (var context = new CountVonCountDbContext())
-            {
-                var connString = ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"]
-                    .ConnectionString;
                 var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
 
                 Expression<Func<WordMetric, bool>> where = wordM => wordM.Count > 10;
@@ -74,54 +73,9 @@ namespace CodeFirst_EF
                 {
                     Console.WriteLine($@"repo : {result}");
                 }
-
             }
 
             Console.ReadLine();
-        }
-
-        private static void DoBulkMerge()
-        {
-            using (var context = new CountVonCountDbContext())
-            {
-                context.Database.ExecuteSqlCommand("exec p_MergeIntoWordMetrics");
-                context.SaveChanges();
-
-            }
-        }
-
-        private static void DoBulkInsertUsingExtension()
-        {
-            Console.WriteLine(@"Do Bulk Insert");
-            var entities = CreateWords(1);
-            var stopwatch = Stopwatch.StartNew();
-            using (var context = new CountVonCountDbContext())
-            {
-                context.BulkInsert(entities);
-            }
-
-            stopwatch.Stop();
-
-            Console.WriteLine($@"Done in {stopwatch.ElapsedMilliseconds}ms");
-        }
-
-        private static void DoBulkInsertUsingSqlBulkCopy<T>(string tableName) where T : class
-        {
-            var entities = CreateWords(1000);
-
-            using (var connection =
-                new SqlConnection(ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"].ConnectionString))
-            {
-                connection.Open();
-                using(var transaction = connection.BeginTransaction())
-                using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
-                using (var reader = ObjectReader.Create(entities, typeof(T).GetProperties().Select(p => p.Name).ToArray()))
-                {
-                    bulkCopy.DestinationTableName = tableName;
-                    bulkCopy.WriteToServer(reader);
-                    transaction.Commit();
-                }
-            }
         }
 
         public static IEnumerable<WordMetric> CreateWords(int num)

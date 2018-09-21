@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CodeFirst_EF.Repositories;
 
 namespace CodeFirst_EF.DTOs
 {
-    public class TmpWordMetric  //Could remove this
+    public class TmpWordMetric : IEntity  //TODO: Could remove this
     {
         public TmpWordMetric() { }
 

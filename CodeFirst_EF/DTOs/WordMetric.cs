@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CodeFirst_EF.Persistence;
+using CodeFirst_EF.Repositories;
 
 namespace CodeFirst_EF.DTOs
 {
