@@ -1,7 +1,9 @@
 ﻿using System.Web.Http;
+using CodeFirst_EF.Collectors;
 using CodeFirst_EF.Repositories;
 using CodeFirst_EF.Security;
 using Unity;
+using Unity.Interception.ContainerIntegration;
 using Unity.Lifetime;
 
 namespace CountVonCount
@@ -14,7 +16,9 @@ namespace CountVonCount
             var container = new UnityContainer();
 
             // Register context, unit of work and repos with per request lifetime
-            container.RegisterType<IWordRepository, WordsRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<ICollector, HtmlCollector>();
+            container.RegisterType<IHtmlProvider, HtmlProvider>();
+            container.RegisterType<IWordRepository, WordsRepository>();
             container.RegisterType<ISaltCache, WordSaltCache>(new SingletonLifetimeManager());
 
             // Set Web API dependency resolution to use TinyIoC

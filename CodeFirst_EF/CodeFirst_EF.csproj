@@ -56,6 +56,9 @@
     <Reference Include="FluentAssertions, Version=5.4.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.5.4.2\lib\net47\FluentAssertions.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.7.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.8.7\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute, Version=3.1.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\packages\NSubstitute.3.1.0\lib\net46\NSubstitute.dll</HintPath>
     </Reference>
@@ -86,6 +89,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collectors\HtmlCollector.cs" />
+    <Compile Include="Collectors\HtmlProvider.cs" />
+    <Compile Include="Collectors\ICollector.cs" />
     <Compile Include="DbContexts\CountVonCountDbContext.cs" />
     <Compile Include="DbInitializers\CountVonCountMigrateDbInitializer.cs" />
     <Compile Include="DTOs\TmpWordMetric.cs" />

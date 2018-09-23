@@ -68,9 +68,9 @@ function getWords() {
 
             $.each(data,
                 function (i, item) {
-                    words.push({ word: item.Name, weight: item.Count });
+                    words.push({ word: item.Word, weight: item.Count });
 
-                    $trHtml += "<tr><td>" + item.Position + "</td><td>" + item.Word + "</td><td>" + item.Count + "</td></tr>";
+                    $trHtml += "<tr><td>" + (i+1) + "</td><td>" + item.Word + "</td><td>" + item.Count + "</td></tr>";
                 });
 
             drawWordCloud(words);
