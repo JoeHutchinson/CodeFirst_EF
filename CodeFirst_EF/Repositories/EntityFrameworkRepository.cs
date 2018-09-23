@@ -14,14 +14,12 @@ namespace CodeFirst_EF.Repositories
     /// Generic EF repository with a flexible Get method and performance optimised Upsert
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    public class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()
+    internal class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()
     {
-        private readonly string _connectionString;
         private readonly TContext _context;
 
-        public EntityFrameworkRepository(string connectionString, TContext context, IHashProvider hashProvider = null)
+        public EntityFrameworkRepository(TContext context, IHashProvider hashProvider = null)   //TODO: Probably want to start hashing
         {
-            _connectionString = connectionString;
             _context = context;
         }
 
@@ -59,10 +57,10 @@ namespace CodeFirst_EF.Repositories
         internal void Upsert<TEntity>(string tableName, string mergeName, IEnumerable<TEntity> entities) where TEntity : class, IEntity
         {
             using (var connection =
-                new SqlConnection(_connectionString))
+                _context.Database.Connection as SqlConnection)
             {
                 connection.Open();
-                using (var transaction = connection.BeginTransaction()) // TODO: try to use either DbContext or SqlConnection, have factory/provider and DI it into this class
+                using (var transaction = connection.BeginTransaction())
                 using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
                 using (var reader = ObjectReader.Create(entities, typeof(TEntity).GetProperties().Select(p => p.Name).ToArray()))
                 {

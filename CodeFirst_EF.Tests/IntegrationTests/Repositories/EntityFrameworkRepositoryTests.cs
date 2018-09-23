@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using CodeFirst_EF.DTOs;
+﻿using CodeFirst_EF.DTOs;
 using CodeFirst_EF.Repositories;
 using CodeFirst_EF.Tests.Helpers;
 using NUnit.Framework;
-using System.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using TddXt.AnyRoot;
@@ -42,10 +41,7 @@ namespace CodeFirst_EF.Tests.IntegrationTests.Repositories
         {
             using (var context = new CountVonCountTestDbContext())
             {
-                var connString = ConfigurationManager.ConnectionStrings["CountVonCountTestDBConnectionString"]
-                    .ConnectionString;
-
-                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(connString, context);
+                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(context);
 
                 var entities = sut.Get<WordMetric>();
 
@@ -58,10 +54,7 @@ namespace CodeFirst_EF.Tests.IntegrationTests.Repositories
         {
             using (var context = new CountVonCountTestDbContext())
             {
-                var connString = ConfigurationManager.ConnectionStrings["CountVonCountTestDBConnectionString"]
-                    .ConnectionString;
-
-                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(connString, context);
+                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(context);
 
                 const int take = 3;
                 var entities = sut.Get<WordMetric>(null, null, take);
@@ -75,10 +68,7 @@ namespace CodeFirst_EF.Tests.IntegrationTests.Repositories
         {
             using (var context = new CountVonCountTestDbContext())
             {
-                var connString = ConfigurationManager.ConnectionStrings["CountVonCountTestDBConnectionString"]
-                    .ConnectionString;
-
-                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(connString, context);
+                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(context);
 
                 IOrderedQueryable<WordMetric> OrderByDesc(IQueryable<WordMetric> words) => words.OrderByDescending(x => x.Count);
 
@@ -94,10 +84,7 @@ namespace CodeFirst_EF.Tests.IntegrationTests.Repositories
         {
             using (var context = new CountVonCountTestDbContext())
             {
-                var connString = ConfigurationManager.ConnectionStrings["CountVonCountTestDBConnectionString"]
-                    .ConnectionString;
-
-                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(connString, context);
+                var sut = new EntityFrameworkRepository<CountVonCountTestDbContext>(context);
 
                 var secondTopCount = _expectedWordMetrics.OrderByDescending(w => w.Count).ToArray()[1].Count;
                 var expectedEntities = _expectedWordMetrics.Where(w => w.Count > secondTopCount);

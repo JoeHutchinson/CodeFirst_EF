@@ -99,6 +99,7 @@
     <Compile Include="Helpers\WordMetricComparer.cs" />
     <Compile Include="IntegrationTests\Repositories\EntityFrameworkRepositoryTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestSetup.cs" />
+    <Compile Include="IntegrationTests\Repositories\WordsRepositoryTests.cs" />
     <Compile Include="Security\PBKDF2ProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

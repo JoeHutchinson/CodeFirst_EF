@@ -27,22 +27,20 @@ namespace CodeFirst_EF
         {
             Console.WriteLine(@"Welcome");
 
-            var pbkdf2Provider = new PBKDF2Provider();
-            var hashResult = pbkdf2Provider.CreateHash("theseTimesTryMensSouls");
-            Console.WriteLine(pbkdf2Provider.VerifyPassword("theseTimesTryMensSouls", hashResult.Hash, hashResult.Salt));
+            //var pbkdf2Provider = new PBKDF2Provider();
+            //var hashResult = pbkdf2Provider.CreateHash("theseTimesTryMensSouls");
+            //Console.WriteLine(pbkdf2Provider.VerifyPassword("theseTimesTryMensSouls", hashResult.Hash, hashResult.Salt));
+            DBInteraction();
 
             Console.ReadLine();
         }
 
         private static void DBInteraction()
         {
-            var connString = ConfigurationManager.ConnectionStrings["CountVonCountDBConnectionString"]
-                .ConnectionString;
-
             // Initial read
             using (var context = new CountVonCountDbContext())
             {
-                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(context);
 
                 Console.WriteLine(@"Word Metrics");
                 foreach (var result in persist.Get<WordMetric>())
@@ -57,10 +55,17 @@ namespace CodeFirst_EF
                 }
             }
 
+            // Words Repo
+            Console.WriteLine(@"Words Repo : Word Metrics");
+            foreach (var wordMetric in (new WordsRepository()).GetTop(10))
+            {
+                Console.WriteLine(wordMetric);
+            }
+
             // Write
             using (var context = new CountVonCountDbContext())
             {
-                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context);
                 repository.Upsert<WordMetric>(CreateWords(5));
                 context.SaveChanges();
             }
@@ -70,7 +75,7 @@ namespace CodeFirst_EF
             // Assert
             using (var context = new CountVonCountDbContext())
             {
-                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(connString, context);
+                var persist = new EntityFrameworkRepository<CountVonCountDbContext>(context);
 
                 Expression<Func<WordMetric, bool>> where = wordM => wordM.Count > 10;
                 IOrderedQueryable<WordMetric> OrderBy(IQueryable<WordMetric> entities) => entities.OrderByDescending(x => x.Count);
