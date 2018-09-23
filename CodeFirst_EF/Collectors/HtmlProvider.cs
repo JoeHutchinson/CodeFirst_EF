@@ -2,7 +2,7 @@
 
 namespace CodeFirst_EF.Collectors
 {
-    public class HtmlProvider : HtmlWeb, IHtmlProvider
+    public sealed class HtmlProvider : HtmlWeb, IHtmlProvider
     {
     }
 

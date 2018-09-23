@@ -18,7 +18,7 @@ namespace CodeFirst_EF.Collectors
             _htmlProvider = htmlProvider;
         }
 
-        public IEnumerable<WordMetric> Collect(string url)
+        public IEnumerable<WordMetric> Collect(string url)  // TODO: Change this to a builder pattern
         {
             var htmlDoc = GetHtmlDocument(url);
 

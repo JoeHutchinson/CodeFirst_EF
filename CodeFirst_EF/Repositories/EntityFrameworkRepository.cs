@@ -1,5 +1,4 @@
-﻿using CodeFirst_EF.DbContexts;
-using CodeFirst_EF.Security;
+﻿using CodeFirst_EF.Security;
 using FastMember;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace CodeFirst_EF.Repositories
     /// Generic EF repository with a flexible Get method and performance optimised Upsert
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    internal class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()
+    internal sealed class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()  //TODO: Separate this into Read and Write repos
     {
         private readonly TContext _context;
         private readonly IHashRepository _hashRepository;

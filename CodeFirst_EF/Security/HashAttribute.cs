@@ -3,7 +3,7 @@
 namespace CodeFirst_EF.Security
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class HashAttribute : Attribute
+    public sealed class HashAttribute : Attribute
     {
     }
 }

@@ -4,7 +4,7 @@ using CodeFirst_EF.Security;
 
 namespace CodeFirst_EF.DTOs
 {
-    public class WordMetric : IEntity
+    public sealed class WordMetric : IEntity
     {
         public WordMetric() { }
 

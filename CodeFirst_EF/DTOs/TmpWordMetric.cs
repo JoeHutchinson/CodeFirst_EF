@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodeFirst_EF.DTOs
 {
-    public class TmpWordMetric : IEntity
+    public sealed class TmpWordMetric : IEntity
     {
         public TmpWordMetric() { }
 

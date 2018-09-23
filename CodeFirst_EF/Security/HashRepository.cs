@@ -1,11 +1,10 @@
-﻿using CodeFirst_EF.Repositories;
-using FluentAssertions.Common;
+﻿using Castle.Core.Internal;
+using CodeFirst_EF.Repositories;
+using CodeFirst_EF.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.Core.Internal;
-using CodeFirst_EF.Settings;
 
 namespace CodeFirst_EF.Security
 {
