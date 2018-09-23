@@ -76,7 +76,8 @@ namespace CodeFirst_EF
             // Write
             using (var saltContext = new CountVonCountDbContext())
             {
-                var wordSaltCache = new WordSaltCache(new EntityFrameworkRepository<CountVonCountDbContext>(saltContext));
+                var wordSaltCache = new WordSaltCache();
+                wordSaltCache.Init(new EntityFrameworkRepository<CountVonCountDbContext>(saltContext));
 
                 using (var context = new CountVonCountDbContext())
                 {

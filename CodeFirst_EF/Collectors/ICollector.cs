@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using CodeFirst_EF.DTOs;
 
 namespace CodeFirst_EF.Collectors
 {
     public interface ICollector
     {
-        IEnumerable<KeyValuePair<string, int>> CollectWords(string location);
+        IEnumerable<WordMetric> Collect(string location);
     }
 }

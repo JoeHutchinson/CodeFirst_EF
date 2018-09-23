@@ -51,8 +51,15 @@ namespace CodeFirst_EF.Security
         public const int HASH_SIZE_INDEX = 2;
         public const int PBKDF2_INDEX = 3;
 
-        public HashResult CreateHash(string password, string suppliedSalt = null)
+        public HashResult CreateHash(string field, string existingSalt = null)
         {
+            var password = string.Copy(field);
+            string suppliedSalt = null;
+            if (existingSalt != null)
+            {
+                suppliedSalt = string.Copy(existingSalt);
+            }
+
             var salt = new byte[SALT_BYTES];
             if (suppliedSalt == null)
             {

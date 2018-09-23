@@ -6,10 +6,17 @@ namespace CodeFirst_EF.Security
 {
     public sealed class WordSaltCache : ISaltCache
     {
-        private readonly Dictionary<string, string> _lookup;
+        private Dictionary<string, string> _lookup;
+        private bool _initialised = false;
 
-        public WordSaltCache(IRepository storageRepository)
+        public void Init(IRepository storageRepository)
         {
+            
+            if (_initialised)
+            {
+                return;
+            }
+
             _lookup = new Dictionary<string, string>();
 
             var entities = storageRepository.Get<WordMetric>();
@@ -18,6 +25,8 @@ namespace CodeFirst_EF.Security
             {
                 _lookup.Add(entity.Word, entity.Salt);
             }
+
+            _initialised = true;
         }
 
         public void Add(string key, string value)
@@ -34,6 +43,7 @@ namespace CodeFirst_EF.Security
 
     public interface ISaltCache
     {
+        void Init(IRepository storageRepository);
         void Add(string key, string value);
         string Get(string key);
     }

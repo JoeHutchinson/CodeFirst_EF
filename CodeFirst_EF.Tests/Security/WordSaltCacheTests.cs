@@ -16,7 +16,9 @@ namespace CodeFirst_EF.Tests.Security
         public void GivenTheCacheIsInitialisingThenTheRepositoryIsRead()
         {
             var mock = new Mock<IRepository>();
-            var sut = new WordSaltCache(mock.Object);
+            var sut = new WordSaltCache();
+
+            sut.Init(mock.Object);
 
             mock.Verify(r => r.Get<WordMetric>(null, null, null), Times.Once);
         }
@@ -33,7 +35,8 @@ namespace CodeFirst_EF.Tests.Security
                 new WordMetric(Root.Any.String(), key, Root.Any.Integer(), salt)
             });
 
-            var sut = new WordSaltCache(mock.Object);
+            var sut = new WordSaltCache();
+            sut.Init(mock.Object);
 
             var result = sut.Get(key);
 
@@ -46,7 +49,8 @@ namespace CodeFirst_EF.Tests.Security
             var key = Root.Any.String();
             var salt = Root.Any.String();
             var mock = new Mock<IRepository>();
-            var sut = new WordSaltCache(mock.Object);
+            var sut = new WordSaltCache();
+            sut.Init(mock.Object);
 
             sut.Add(key, salt);
 

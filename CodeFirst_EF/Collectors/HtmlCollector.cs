@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using CodeFirst_EF.DTOs;
 
 namespace CodeFirst_EF.Collectors
 {
@@ -17,7 +18,7 @@ namespace CodeFirst_EF.Collectors
             _htmlProvider = htmlProvider;
         }
 
-        public IEnumerable<KeyValuePair<string, int>> CollectWords(string url)
+        public IEnumerable<WordMetric> Collect(string url)
         {
             var htmlDoc = GetHtmlDocument(url);
 
@@ -32,10 +33,10 @@ namespace CodeFirst_EF.Collectors
             return countedWords;
         }
 
-        internal IEnumerable<KeyValuePair<string, int>> CountWordOccurances(string inputText)
+        internal IEnumerable<WordMetric> CountWordOccurances(string inputText)
         {
 
-            var knownWords = new Dictionary<string, int>();
+            var knownWords = new Dictionary<string, WordMetric>();
             foreach (var word in inputText.ToLower().Split(' '))
             {
                 if (string.IsNullOrWhiteSpace(word))
@@ -45,15 +46,16 @@ namespace CodeFirst_EF.Collectors
 
                 if (knownWords.ContainsKey(word))
                 {
-                    knownWords[word]++;
+                    knownWords[word].Count++;
                 }
                 else
                 {
-                    knownWords.Add(word, 1);
+                    knownWords.Add(word, new WordMetric(word, word, 1, null));
                 }
             }
 
-            return knownWords;
+            var result = knownWords.Values.ToList();
+            return result;
         }
 
         internal HtmlDocument GetHtmlDocument(string url)

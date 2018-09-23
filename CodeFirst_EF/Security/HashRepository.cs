@@ -9,7 +9,7 @@ using CodeFirst_EF.Settings;
 
 namespace CodeFirst_EF.Security
 {
-    internal class HashRepository : IHashRepository
+    public sealed class HashRepository : IHashRepository
     {
         private readonly IHashProvider _hashAlgorithm;
         private readonly ISaltCache _saltCache;
@@ -58,7 +58,7 @@ namespace CodeFirst_EF.Security
 
                     // Check if we have a salt stored for this value and hash the property
                     var existingSalt = _saltCache.Get(hashKey);
-                    var hash = _hashAlgorithm.CreateHash(string.Copy(unhashed), string.Copy(existingSalt));
+                    var hash = _hashAlgorithm.CreateHash(unhashed, existingSalt);
 
                     // Add salt to cache
                     if (existingSalt.IsNullOrEmpty())
@@ -104,7 +104,7 @@ namespace CodeFirst_EF.Security
         }
     }
 
-    internal interface IHashRepository
+    public interface IHashRepository
     {
         IEnumerable<T> Hash<T>(IEnumerable<T> entities) where T : IEntity;
     }
