@@ -72,15 +72,35 @@ namespace CodeFirst_EF
                 Console.WriteLine(wordMetric);
             }
 
+            
             // Write
-            using (var context = new CountVonCountDbContext())
+            using (var saltContext = new CountVonCountDbContext())
             {
-                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context,
-                    new HashRepository(new PBKDF2Provider(),
-                        new WordSaltCache(new EntityFrameworkRepository<CountVonCountDbContext>(context))));
-                repository.Upsert(CreateWords(5));
-                context.SaveChanges();
+                var wordSaltCache = new WordSaltCache(new EntityFrameworkRepository<CountVonCountDbContext>(saltContext));
+
+                using (var context = new CountVonCountDbContext())
+                {
+                    var words = new[] { new WordMetric("Id1", "MyWord", 3, null) };
+
+                    var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context,
+                        new HashRepository(new PBKDF2Provider(),
+                            wordSaltCache));
+                    repository.Upsert(words);
+                    context.SaveChanges();
+                }
+
+                using (var context = new CountVonCountDbContext())
+                {
+                    var words = new[] { new WordMetric("Id1", "MyWord", 3, null)};
+
+                    var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context,
+                        new HashRepository(new PBKDF2Provider(),
+                            wordSaltCache));
+                    repository.Upsert(words);
+                    context.SaveChanges();
+                }
             }
+            
 
             Console.WriteLine(@"Complete");
 

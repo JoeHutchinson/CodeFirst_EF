@@ -57,10 +57,14 @@ namespace CodeFirst_EF.Security
                     var unhashed = type.GetProperty(propertyName).GetValue(entity).ToString();
 
                     // Check if we have a salt stored for this value and hash the property
-                    var hash = _hashAlgorithm.CreateHash(String.Copy(unhashed), _saltCache.Get(hashKey));
+                    var existingSalt = _saltCache.Get(hashKey);
+                    var hash = _hashAlgorithm.CreateHash(string.Copy(unhashed), string.Copy(existingSalt));
 
                     // Add salt to cache
-                    _saltCache.Add(unhashed, hash.Salt);    //TODO: would be cleaner to have _saltCache.GetOrCreate(unhashed)
+                    if (existingSalt.IsNullOrEmpty())
+                    {
+                        _saltCache.Add(unhashed, hash.Salt);    //TODO: would be cleaner to have _saltCache.GetOrCreate(unhashed)
+                    }
 
                     // Set the hashed value onto the property and add the salt too
                     type.GetProperty(propertyName).SetValue(entity, hash.Hash);
