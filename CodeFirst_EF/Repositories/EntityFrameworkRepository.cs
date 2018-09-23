@@ -19,7 +19,7 @@ namespace CodeFirst_EF.Repositories
         private readonly TContext _context;
         private readonly IHashRepository _hashRepository;
 
-        public EntityFrameworkRepository(TContext context, IHashRepository hashRepository = null)   //TODO: Probably want to start hashing
+        public EntityFrameworkRepository(TContext context, IHashRepository hashRepository = null)
         {
             _context = context;
             _hashRepository = hashRepository;

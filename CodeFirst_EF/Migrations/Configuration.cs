@@ -1,8 +1,3 @@
-using CodeFirst_EF.DTOs;
-using TddXt.AnyRoot.Numbers;
-using TddXt.AnyRoot.Strings;
-using static TddXt.AnyRoot.Root;
-
 namespace CodeFirst_EF.Migrations
 {
     using System.Data.Entity.Migrations;
@@ -21,10 +16,6 @@ namespace CodeFirst_EF.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-            
-            var word = Any.String(10);
-            //context.WordMetrics.Add(new WordMetric(word, word, Any.Integer(), null));   //TODO: Remove these
-            //context.TmpWordMetrics.Add(new TmpWordMetric(word, word, Any.Integer(), null));
         }
     }
 }
