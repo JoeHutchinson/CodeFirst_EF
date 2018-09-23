@@ -13,11 +13,16 @@ namespace CodeFirst_EF.Security
     {
         private readonly IHashProvider _hashAlgorithm;
         private readonly ISaltCache _saltCache;
+        private readonly bool _hashEnabled;
 
-        public HashRepository(IHashProvider hashAlgorithm, ISaltCache saltCache)
+        public HashRepository(IHashProvider hashAlgorithm, ISaltCache saltCache) : this(hashAlgorithm, saltCache, AppSettings.Get<bool>("HashingEnabled"))
+        {}
+
+        internal HashRepository(IHashProvider hashAlgorithm, ISaltCache saltCache, bool hashEnabled)
         {
             _hashAlgorithm = hashAlgorithm;
             _saltCache = saltCache;
+            _hashEnabled = hashEnabled;
         }
 
         /// <summary>
@@ -28,7 +33,7 @@ namespace CodeFirst_EF.Security
         /// <returns>Hashed entities</returns>
         public IEnumerable<T> Hash<T>(IEnumerable<T> entities) where T : IEntity
         {
-            if (!AppSettings.Get<bool>("HashingEnabled"))
+            if (!_hashEnabled)
             {
                 return entities;
             }
@@ -67,6 +72,11 @@ namespace CodeFirst_EF.Security
             return hashedEntities;
         }
 
+        /// <summary>
+        /// Use reflection to identify any property with Hash custom attribute
+        /// </summary>
+        /// <param name="t">Entity type</param>
+        /// <returns></returns>
         private static IEnumerable<string> GetPropertiesToHash(Type t)
         {
             var properties = t.GetProperties();
