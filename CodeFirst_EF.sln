@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeFirst_EF.Tests", "CodeF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountVonCount.API", "CountVonCount.API\CountVonCount.API.csproj", "{15BEE183-3D5B-4361-B664-C13B426E2449}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountVonCount.API.Tests", "CountVonCount.API.Tests\CountVonCount.API.Tests.csproj", "{DA88441B-45FF-46EA-AE8D-A1B6B9133918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{15BEE183-3D5B-4361-B664-C13B426E2449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15BEE183-3D5B-4361-B664-C13B426E2449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15BEE183-3D5B-4361-B664-C13B426E2449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA88441B-45FF-46EA-AE8D-A1B6B9133918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA88441B-45FF-46EA-AE8D-A1B6B9133918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA88441B-45FF-46EA-AE8D-A1B6B9133918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA88441B-45FF-46EA-AE8D-A1B6B9133918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
