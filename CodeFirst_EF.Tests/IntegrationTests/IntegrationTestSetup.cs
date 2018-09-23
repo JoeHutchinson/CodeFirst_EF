@@ -1,7 +1,5 @@
-﻿using System.Data.Entity;
-using CodeFirst_EF.DbContexts;
+﻿using CodeFirst_EF.DbContexts;
 using CodeFirst_EF.Tests.Helpers;
-using NUnit.Framework;
 
 namespace CodeFirst_EF.Tests.IntegrationTests
 {

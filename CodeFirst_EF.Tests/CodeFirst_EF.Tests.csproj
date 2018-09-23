@@ -100,8 +100,9 @@
     <Compile Include="Helpers\CountVonCountTestDbContext.cs" />
     <Compile Include="Helpers\CountVonCountMigrateTestDbInitializer.cs" />
     <Compile Include="Helpers\WordMetricComparer.cs" />
-    <Compile Include="IntegrationTests\Repositories\EntityFrameworkRepositoryTests.cs" />
+    <Compile Include="IntegrationTests\Repositories\EntityFrameworkRepositoryReadOnlyTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestSetup.cs" />
+    <Compile Include="IntegrationTests\Repositories\EntityFrameworkRepositoryWriteOnlyTests.cs" />
     <Compile Include="IntegrationTests\Repositories\WordsRepositoryTests.cs" />
     <Compile Include="Security\HashRepositoryTests.cs" />
     <Compile Include="Security\PBKDF2ProviderTests.cs" />

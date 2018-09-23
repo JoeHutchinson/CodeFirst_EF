@@ -60,8 +60,8 @@ namespace CodeFirst_EF.Repositories
 
         internal void Upsert<TEntity>(string tableName, string mergeName, IEnumerable<TEntity> entities) where TEntity : class, IEntity
         {
-            using (var connection =
-                _context.Database.Connection as SqlConnection)
+            using(var context = new TContext())
+            using (var connection = context.Database.Connection as SqlConnection)
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
@@ -69,15 +69,16 @@ namespace CodeFirst_EF.Repositories
                 using (var reader = ObjectReader.Create(entities, typeof(TEntity).GetProperties().Select(p => p.Name).ToArray()))
                 {
                     bulkCopy.DestinationTableName = tableName;
-                    bulkCopy.WriteToServer(reader);
+                    bulkCopy.WriteToServer(reader); //TODO: Add TVP
                     transaction.Commit();
                 }
-                    //TODO: Add TVP
-                using (var context = new CountVonCountDbContext())  //TODO: Use above transaction?
-                {
-                    context.Database.ExecuteSqlCommand($"exec {mergeName}");
-                    context.SaveChanges();
-                }
+            }
+
+            using (var context = new TContext())
+            {
+                context.Database.ExecuteSqlCommand($"exec {mergeName}");
+                context.SaveChanges();
+
             }
         }
     }

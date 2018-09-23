@@ -1,3 +1,5 @@
+using CodeFirst_EF.Settings;
+
 namespace CodeFirst_EF.Migrations
 {
     using System.Data.Entity.Migrations;
@@ -13,13 +15,9 @@ namespace CodeFirst_EF.Migrations
                     Id = c.String(nullable: false, maxLength: 128),
                     Count = c.Int(nullable: false),
                     Salt = c.String(nullable: true, maxLength: 128)
-                    //Word = c.String(),
+                    //Word = c.String(nullable: false, maxLength: 128)
                 })
             .PrimaryKey(t => t.Id);
-
-            // Manually add Always Encrypted Word field to TempWordMetrics table
-            Sql(@"AlTER TABLE [dbo].[TmpWordMetrics] ADD [Word] [nvarchar](max) COLLATE Latin1_General_BIN2 ENCRYPTED 
-                WITH (COLUMN_ENCRYPTION_KEY = [CEK_Auto1], ENCRYPTION_TYPE = Deterministic, ALGORITHM = 'AEAD_AES_256_CBC_HMAC_SHA_256') NOT NULL");
 
             CreateTable(
                 "dbo.WordMetrics",
@@ -28,13 +26,26 @@ namespace CodeFirst_EF.Migrations
                     Id = c.String(nullable: false, maxLength: 128),
                     Count = c.Int(nullable: false),
                     Salt = c.String(nullable: true, maxLength: 128)
-                    //Word = c.String(),
+                    //Word = c.String(nullable: false, maxLength: 128)
                 })
             .PrimaryKey(t => t.Id);
 
-            // Manually add Always Encrypted Word field to TempWordMetrics table
-            Sql(@"AlTER TABLE [dbo].[WordMetrics] ADD [Word] [nvarchar](max) COLLATE Latin1_General_BIN2 ENCRYPTED 
+            if (AppSettings.Get<bool>("EncryptionEnabled"))
+            {
+                // Manually add Always Encrypted Word field to TempWordMetrics table
+                Sql(@"AlTER TABLE [dbo].[TmpWordMetrics] ADD [Word] [nvarchar](max) COLLATE Latin1_General_BIN2 ENCRYPTED 
                 WITH (COLUMN_ENCRYPTION_KEY = [CEK_Auto1], ENCRYPTION_TYPE = Deterministic, ALGORITHM = 'AEAD_AES_256_CBC_HMAC_SHA_256') NOT NULL");
+
+                // Manually add Always Encrypted Word field to TempWordMetrics table
+                Sql(@"AlTER TABLE [dbo].[WordMetrics] ADD [Word] [nvarchar](max) COLLATE Latin1_General_BIN2 ENCRYPTED 
+                WITH (COLUMN_ENCRYPTION_KEY = [CEK_Auto1], ENCRYPTION_TYPE = Deterministic, ALGORITHM = 'AEAD_AES_256_CBC_HMAC_SHA_256') NOT NULL");
+            }
+            else
+            {
+                Sql(@"AlTER TABLE [dbo].[TmpWordMetrics] ADD [Word] [nvarchar](max);");
+                Sql(@"AlTER TABLE [dbo].[WordMetrics] ADD [Word] [nvarchar](max);");
+
+            }
 
             // Add stored procedure to do a blind upsert into main table from temporary table
             CreateStoredProcedure(
