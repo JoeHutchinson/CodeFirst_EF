@@ -23,6 +23,7 @@ namespace CodeFirst_EF.DTOs
 
         public string Salt { get; set; }
 
+        [HashKey]
         public string Word { get; set; }
 
         public override string ToString()

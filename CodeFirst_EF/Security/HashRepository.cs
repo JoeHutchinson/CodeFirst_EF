@@ -46,16 +46,18 @@ namespace CodeFirst_EF.Security
                 return entities;
             }
 
-            var hashedEntities = new List<T>(entities.Count());
+            var hashPropertyKey = GetHashKeyProperty(type);
+            //var hashedEntities = new List<T>(entities.Count());
             foreach (var entity in entities)
             {
+                var hashKey = type.GetProperty(hashPropertyKey).GetValue(entity).ToString();
                 foreach (var propertyName in hashProperties)
                 {
                     // Read the unhashed property
                     var unhashed = type.GetProperty(propertyName).GetValue(entity).ToString();
 
                     // Check if we have a salt stored for this value and hash the property
-                    var hash = _hashAlgorithm.CreateHash(unhashed, _saltCache.Get(unhashed));
+                    var hash = _hashAlgorithm.CreateHash(String.Copy(unhashed), _saltCache.Get(hashKey));
 
                     // Add salt to cache
                     _saltCache.Add(unhashed, hash.Salt);    //TODO: would be cleaner to have _saltCache.GetOrCreate(unhashed)
@@ -64,12 +66,12 @@ namespace CodeFirst_EF.Security
                     type.GetProperty(propertyName).SetValue(entity, hash.Hash);
                     type.GetProperty("Salt").SetValue(entity, hash.Salt);
 
-                    hashedEntities.Add(entity);
+                    //hashedEntities.Add(entity);
 
                 }
             }
 
-            return hashedEntities;
+            return entities;
         }
 
         /// <summary>
@@ -83,6 +85,18 @@ namespace CodeFirst_EF.Security
             return from property in t.GetProperties()
                 where property.GetCustomAttributes().Any(att => att.GetType() == typeof(HashAttribute))
                 select property.Name;
+        }
+
+        /// <summary>
+        /// Use reflection to identify the property that signifies the key to lookup for existing salt
+        /// </summary>
+        /// <param name="t">Entity type</param>
+        /// <returns></returns>
+        private static string GetHashKeyProperty(Type t)
+        {
+            var properties = t.GetProperties();
+            return properties.First(p => p.GetCustomAttributes().Any(att => att.GetType() == typeof(HashKeyAttribute)))
+                .Name;
         }
     }
 

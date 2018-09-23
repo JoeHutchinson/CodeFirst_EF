@@ -3,7 +3,7 @@ using CountVonCount.API.Controllers;
 using Moq;
 using NUnit.Framework;
 
-namespace CountVonCount.API.Tests
+namespace CountVonCount.API.Tests.Controllers
 {
     [TestFixture]
     public class WordsControllerTests

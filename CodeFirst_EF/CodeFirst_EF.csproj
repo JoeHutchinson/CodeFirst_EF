@@ -101,6 +101,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DTOs\WordMetric.cs" />
     <Compile Include="Repositories\WordsRepository.cs" />
+    <Compile Include="Security\HashKeyAttribute.cs" />
     <Compile Include="Security\HashAttribute.cs" />
     <Compile Include="Security\HashRepository.cs" />
     <Compile Include="Security\PBKDF2Provider.cs" />

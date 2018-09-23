@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CountVonCount.API.Tests
+namespace CountVonCount.API.Tests.Controllers
 {
     [TestFixture]
     public class CrawlControllerTests
