@@ -1,12 +1,11 @@
 ﻿using CodeFirst_EF.DbContexts;
 using CodeFirst_EF.DTOs;
 using CodeFirst_EF.Repositories;
+using CodeFirst_EF.Security;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
-using CodeFirst_EF.Security;
 using TddXt.AnyRoot.Strings;
 using static TddXt.AnyRoot.Root;
 
@@ -76,7 +75,9 @@ namespace CodeFirst_EF
             // Write
             using (var context = new CountVonCountDbContext())
             {
-                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context);
+                var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context,
+                    new HashRepository(new PBKDF2Provider(),
+                        new WordSaltCache(new EntityFrameworkRepository<CountVonCountDbContext>(context))));
                 repository.Upsert(CreateWords(5));
                 context.SaveChanges();
             }

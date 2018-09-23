@@ -23,8 +23,8 @@ namespace CodeFirst_EF.Migrations
             //  to avoid creating duplicate seed data.
             
             var word = Any.String(10);
-            context.WordMetrics.Add(new WordMetric(word, word, Any.Integer(), null));   //TODO: Remove these
-            context.TmpWordMetrics.Add(new TmpWordMetric(word, word, Any.Integer(), null));
+            //context.WordMetrics.Add(new WordMetric(word, word, Any.Integer(), null));   //TODO: Remove these
+            //context.TmpWordMetrics.Add(new TmpWordMetric(word, word, Any.Integer(), null));
         }
     }
 }

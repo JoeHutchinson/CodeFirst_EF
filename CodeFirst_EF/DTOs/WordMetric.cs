@@ -21,9 +21,9 @@ namespace CodeFirst_EF.DTOs
 
         public int Count { get; set; }
 
-        public string Word { get; set; }
-
         public string Salt { get; set; }
+
+        public string Word { get; set; }
 
         public override string ToString()
         {

@@ -13,7 +13,7 @@ namespace CodeFirst_EF.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201809210808251_InitialCreate"; }
+            get { return "201809231129479_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

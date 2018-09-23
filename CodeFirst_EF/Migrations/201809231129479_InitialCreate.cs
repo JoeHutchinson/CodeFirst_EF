@@ -9,12 +9,12 @@ namespace CodeFirst_EF.Migrations
             CreateTable(
                 "dbo.TmpWordMetrics",
                 c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Count = c.Int(nullable: false),
-                        Salt = c.String(nullable: true, maxLength:128)
-                        //Word = c.String(),
-                    })
+                {
+                    Id = c.String(nullable: false, maxLength: 128),
+                    Count = c.Int(nullable: false),
+                    Salt = c.String(nullable: true, maxLength: 128)
+                    //Word = c.String(),
+                })
             .PrimaryKey(t => t.Id);
 
             // Manually add Always Encrypted Word field to TempWordMetrics table
@@ -24,12 +24,12 @@ namespace CodeFirst_EF.Migrations
             CreateTable(
                 "dbo.WordMetrics",
                 c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Count = c.Int(nullable: false),
-                        Salt = c.String(nullable: true, maxLength:128)
-                        //Word = c.String(),
-                    })
+                {
+                    Id = c.String(nullable: false, maxLength: 128),
+                    Count = c.Int(nullable: false),
+                    Salt = c.String(nullable: true, maxLength: 128)
+                    //Word = c.String(),
+                })
             .PrimaryKey(t => t.Id);
 
             // Manually add Always Encrypted Word field to TempWordMetrics table
@@ -38,9 +38,9 @@ namespace CodeFirst_EF.Migrations
 
             // Add stored procedure to do a blind upsert into main table from temporary table
             CreateStoredProcedure(
-                @"p_MergeIntoWordMetrics", 
+                @"p_MergeIntoWordMetrics",
                 @"SET NOCOUNT ON
-	            MERGE WordMetrics AS TARGET
+                MERGE WordMetrics AS TARGET
                     USING TmpWordMetrics AS SOURCE 
                     ON (TARGET.Word = SOURCE.Word)
                     WHEN MATCHED THEN
@@ -51,7 +51,7 @@ namespace CodeFirst_EF.Migrations
                 TRUNCATE TABLE TmpWordMetrics;
                 ");
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.WordMetrics");

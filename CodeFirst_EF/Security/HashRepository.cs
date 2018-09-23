@@ -41,6 +41,7 @@ namespace CodeFirst_EF.Security
                 return entities;
             }
 
+            var hashedEntities = new List<T>(entities.Count());
             foreach (var entity in entities)
             {
                 foreach (var propertyName in hashProperties)
@@ -58,15 +59,20 @@ namespace CodeFirst_EF.Security
                     type.GetProperty(propertyName).SetValue(entity, hash.Hash);
                     type.GetProperty("Salt").SetValue(entity, hash.Salt);
 
+                    hashedEntities.Add(entity);
+
                 }
             }
 
-            return entities;
+            return hashedEntities;
         }
 
         private static IEnumerable<string> GetPropertiesToHash(Type t)
         {
-            return from property in t.GetProperties(BindingFlags.Public) where property.HasAttribute<HashAttribute>() select property.Name;
+            var properties = t.GetProperties();
+            return from property in t.GetProperties()
+                where property.GetCustomAttributes().Any(att => att.GetType() == typeof(HashAttribute))
+                select property.Name;
         }
     }
 
