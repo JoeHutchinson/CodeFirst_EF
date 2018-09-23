@@ -4,7 +4,7 @@ using System.Web.Http.Dependencies;
 using Unity;
 using Unity.Exceptions;
 
-namespace CountVonCount.API
+namespace CountVonCount
 {
     public class UnityResolver : IDependencyResolver
     {

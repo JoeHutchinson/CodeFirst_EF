@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace CountVonCount.API
+namespace CountVonCount
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

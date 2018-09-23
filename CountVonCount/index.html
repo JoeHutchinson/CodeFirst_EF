@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Count Von Count</title>
+    <link href="styles.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script src="Scripts/jQWCloudv3.1.js"></script>
+</head>
+<body>
+    <div id="inputDiv">
+        <h1>Let's count together</h1>
+        <form id="submitUrlForm" method="post">
+            <input type="url" name="url" placeholder="Give me the website URL to count" id="url" />
+            <input type="button" id="submitUrl" value="Go" />
+        </form>
+    </div>
+    <div id="wordCloud" style="display: none"></div>
+    <div id="loadingDiv" style="display: none">
+        <h1>Counting...</h1>
+    </div>
+    <div id="errorDiv" style="display: none">
+        <h1 id="errorDescription"></h1>
+    </div>
+    <div id="wordsDiv" style="display: none">
+        <h2>Our top words are :</h2>
+        <table id="wordsTable">
+            <tr>
+                <th>Position</th>
+                <th>Word</th>
+                <th>Count</th>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

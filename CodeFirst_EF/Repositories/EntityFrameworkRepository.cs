@@ -1,14 +1,12 @@
-﻿using System;
+﻿using CodeFirst_EF.DbContexts;
+using CodeFirst_EF.Security;
+using FastMember;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using CodeFirst_EF.DbContexts;
-using CodeFirst_EF.Security;
-using CodeFirst_EF.Settings;
-using FastMember;
 
 namespace CodeFirst_EF.Repositories
 {

@@ -4,7 +4,7 @@ using CodeFirst_EF.Security;
 using Unity;
 using Unity.Lifetime;
 
-namespace CountVonCount.API
+namespace CountVonCount
 {
     public static class WebApiConfig
     {
@@ -19,7 +19,7 @@ namespace CountVonCount.API
 
             // Set Web API dependency resolution to use TinyIoC
             config.DependencyResolver = new UnityResolver(container);
-            
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

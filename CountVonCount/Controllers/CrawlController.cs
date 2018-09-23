@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Web.Http;
 
-namespace CountVonCount.API.Controllers
+namespace CountVonCount.Controllers
 {
     /// <summary>
     /// Endpoint for issuing requests to process more data. Could be from multiple sources,
     /// for larger jobs it could provide crawl status for each.
     /// </summary>
-    public class CrawlController : ApiController
+    public sealed class CrawlController : ApiController
     {
         // GET: api/Crawl
         public IEnumerable<string> Get()
@@ -17,14 +17,11 @@ namespace CountVonCount.API.Controllers
         }
 
         // POST: api/Crawl
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody]FormData data)
         {
-            Console.WriteLine($"POST: value: {value}");
-        }
+            Console.WriteLine($"POST: data: {data}");
 
-        // DELETE: api/Crawl/5
-        public void Delete(int id)
-        {
+            return Ok(data.url);
         }
     }
 }
