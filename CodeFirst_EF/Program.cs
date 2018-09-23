@@ -30,9 +30,20 @@ namespace CodeFirst_EF
             //var pbkdf2Provider = new PBKDF2Provider();
             //var hashResult = pbkdf2Provider.CreateHash("theseTimesTryMensSouls");
             //Console.WriteLine(pbkdf2Provider.VerifyPassword("theseTimesTryMensSouls", hashResult.Hash, hashResult.Salt));
+            InitDb();
             DBInteraction();
 
             Console.ReadLine();
+        }
+
+        private static void InitDb()
+        {
+            using (var context = new CountVonCountDbContext())
+            {
+                // Force DB initialisation using migration scripts
+                context.Database.Initialize(true);
+                context.SaveChanges();
+            }
         }
 
         private static void DBInteraction()
@@ -66,7 +77,7 @@ namespace CodeFirst_EF
             using (var context = new CountVonCountDbContext())
             {
                 var repository = new EntityFrameworkRepository<CountVonCountDbContext>(context);
-                repository.Upsert<WordMetric>(CreateWords(5));
+                repository.Upsert(CreateWords(5));
                 context.SaveChanges();
             }
 
@@ -95,7 +106,7 @@ namespace CodeFirst_EF
             for (var i = 0; i < num; i++)
             {
                 var word = Any.String(10);
-                yield return new WordMetric(word, word, 3);
+                yield return new WordMetric(word, word, 3, null);
             }
         }
     }

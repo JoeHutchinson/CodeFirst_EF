@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using CodeFirst_EF.DbContexts;
 using CodeFirst_EF.Security;
+using CodeFirst_EF.Settings;
 using FastMember;
 
 namespace CodeFirst_EF.Repositories
@@ -17,14 +19,18 @@ namespace CodeFirst_EF.Repositories
     internal class EntityFrameworkRepository<TContext> : IRepository where TContext : DbContext, new()
     {
         private readonly TContext _context;
+        private readonly IHashRepository _hashRepository;
 
-        public EntityFrameworkRepository(TContext context, IHashProvider hashProvider = null)   //TODO: Probably want to start hashing
+        public EntityFrameworkRepository(TContext context, IHashRepository hashRepository = null)   //TODO: Probably want to start hashing
         {
             _context = context;
+            _hashRepository = hashRepository;
         }
 
         public void Upsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity
         {
+            entities = _hashRepository.Hash(entities);
+
             Upsert($"Tmp{typeof(TEntity).Name}s", $"p_MergeInto{typeof(TEntity).Name}s", entities);
         }
 

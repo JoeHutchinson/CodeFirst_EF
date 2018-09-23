@@ -15,10 +15,10 @@ namespace CodeFirst_EF.Tests.IntegrationTests.Repositories
     {
         private readonly List<WordMetric> _expectedWordMetrics = new List<WordMetric>()
         {
-            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer()),
-            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer()),
-            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer()),
-            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer())
+            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer(), Root.Any.String()),
+            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer(), Root.Any.String()),
+            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer(), Root.Any.String()),
+            new WordMetric(Root.Any.String(), Root.Any.String(), Root.Any.Integer(), Root.Any.String())
         };
 
         [OneTimeSetUp]

@@ -12,6 +12,7 @@ namespace CodeFirst_EF.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Count = c.Int(nullable: false),
+                        Salt = c.String(nullable: true, maxLength:128)
                         //Word = c.String(),
                     })
             .PrimaryKey(t => t.Id);
@@ -26,6 +27,7 @@ namespace CodeFirst_EF.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Count = c.Int(nullable: false),
+                        Salt = c.String(nullable: true, maxLength:128)
                         //Word = c.String(),
                     })
             .PrimaryKey(t => t.Id);
@@ -44,8 +46,8 @@ namespace CodeFirst_EF.Migrations
                     WHEN MATCHED THEN
                     UPDATE SET TARGET.Count = TARGET.Count + SOURCE.Count
                     WHEN NOT MATCHED BY TARGET THEN 
-                    INSERT (Id, Word, Count)
-                    VALUES (SOURCE.Id, SOURCE.Word, SOURCE.Count);
+                    INSERT (Id, Word, Count, Salt)
+                    VALUES (SOURCE.Id, SOURCE.Word, SOURCE.Count, SOURCE.Salt);
                 TRUNCATE TABLE TmpWordMetrics;
                 ");
         }

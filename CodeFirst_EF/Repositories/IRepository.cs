@@ -10,7 +10,7 @@ namespace CodeFirst_EF.Repositories
     /// Could define a Filter design pattern over the interface but felt we lose encapsulation as we'd expose DBSet.
     /// </summary>
     /// <typeparam name="T">Entity to save/get</typeparam>
-    internal interface IRepository
+    public interface IRepository
     {
         IEnumerable<TEntity> Get<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
