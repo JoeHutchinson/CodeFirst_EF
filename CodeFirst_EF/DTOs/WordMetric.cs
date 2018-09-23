@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
 using CodeFirst_EF.Repositories;
+using CodeFirst_EF.Security;
 
 namespace CodeFirst_EF.DTOs
 {
@@ -14,7 +16,7 @@ namespace CodeFirst_EF.DTOs
             Count = count;
         }
 
-        [Key]
+        [Key, Hash]
         public string Id { get; set; }
 
         public int Count { get; set; }
