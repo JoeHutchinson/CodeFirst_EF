@@ -11,29 +11,33 @@
     <script src="Scripts/jQWCloudv3.1.js"></script>
 </head>
 <body>
-    <div id="inputDiv">
-        <h1>Let's count together</h1>
-        <form id="submitUrlForm" method="post">
-            <input type="url" name="url" placeholder="Give me the website URL to count" id="url" />
-            <input type="button" id="submitUrl" value="Go" />
-        </form>
-    </div>
-    <div id="wordCloud" style="display: none"></div>
-    <div id="loadingDiv" style="display: none">
-        <h1>Counting...</h1>
-    </div>
-    <div id="errorDiv" style="display: none">
-        <h1 id="errorDescription"></h1>
-    </div>
-    <div id="wordsDiv" style="display: none">
-        <h2>Our top words are :</h2>
-        <table id="wordsTable">
-            <tr>
-                <th>Position</th>
-                <th>Word</th>
-                <th>Count</th>
-            </tr>
-        </table>
-    </div>
+<div id="navDiv">
+    <button onclick="showHome()">Home</button>
+    <button onclick="showAdmin()">Admin</button>
+</div>
+<div id="inputDiv">
+    <h1>Let's count together</h1>
+    <form id="submitUrlForm" method="post">
+        <input type="url" name="url" placeholder="Give me the website URL to count" id="url"/>
+        <input type="button" id="submitUrl" value="Go"/>
+    </form>
+</div>
+<div id="wordCloud" style="display: none"></div>
+<div id="loadingDiv" style="display: none">
+    <h1>Counting...</h1>
+</div>
+<div id="errorDiv" style="display: none">
+    <h1 id="errorDescription"></h1>
+</div>
+<div id="wordsDiv" style="display: none">
+    <h2>Our top words are :</h2>
+    <table id="wordsTable">
+        <tr>
+            <th>Position</th>
+            <th>Word</th>
+            <th>Count</th>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

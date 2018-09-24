@@ -29,7 +29,6 @@ function startLoading() {
 function endLoading() {
     $("#loadingDiv").hide();
     $("#wordCloud").show();
-    $("#wordsDiv").show();
 }
 
 function showError() {
@@ -39,6 +38,15 @@ function showError() {
     $("#errorDiv").show();
 }
 
+function showHome() {
+    $("#wordCloud").show();
+    $("#wordsDiv").hide();
+}
+
+function showAdmin() {
+    $("#wordCloud").hide();
+    $("#wordsDiv").show();
+}
 function drawWordCloud(words) {
     $("#wordCloud").jQWCloud({
         words: words,
