@@ -40,7 +40,7 @@ All integration tests extend a common test setup class IntegrationTestSetup, cou
 I've added tests around most functionality, there's still more to test but time was against me but hopefully you can see the approach my testing style from what I have done.
 
 ### Configuration
-You can control whether to use Always Encrypted and hashing features through app.config settings. By default I've switched hashing off as it slows the code down considerably.
+You can control whether to use Always Encrypted and hashing features through app.config settings. By default I've switched hashing off as it slows the code down considerably. In a production environment I'd stored this kind of configuration in Consul and secrets in Vault. For the keys themselves I'd put them in Azure Vault.
 
 #### Performance
 From the outset I wanted to be sympathetic towards SQL, bulk updates in EF by default are highly inefficient so instead I opted to use a two table model. The first table acts like a temporary table allowing all just read words to be bulk uploaded using SqlBulkCopy, I've not had chance to add a TVP (table value property) to this but even without it the performance of this is good. Once updated a stored procedure does a SQL Merge from temporary table to main table, matching on Id field, matches have their counts incremented by the value in temporary table and no match has the record from temporary table inserted. This approach is nice as its the fastest approach to get this kind of information into SQL that I know of. This all means that the main table contains all read words, that goes beyond the top 100 displayed to the user, nice as it means that words currently not in the top 100 could get into the top 100 based on subsequent crawls of URLs.
