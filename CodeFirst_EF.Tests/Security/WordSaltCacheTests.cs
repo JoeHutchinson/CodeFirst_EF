@@ -52,7 +52,7 @@ namespace CodeFirst_EF.Tests.Security
             var sut = new WordSaltCache();
             sut.Init(mock.Object);
 
-            sut.Add(key, salt);
+            sut.TryAdd(key, salt);
 
             Assert.AreEqual(salt, sut.Get(key));
         }

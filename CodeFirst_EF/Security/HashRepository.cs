@@ -46,31 +46,32 @@ namespace CodeFirst_EF.Security
             }
 
             var hashPropertyKey = GetHashKeyProperty(type);
-            //var hashedEntities = new List<T>(entities.Count());
-            foreach (var entity in entities)
+            var hashedEntities = entities.AsParallel().Select(e =>
             {
-                var hashKey = type.GetProperty(hashPropertyKey).GetValue(entity).ToString();
+                var hashKey = type.GetProperty(hashPropertyKey).GetValue(e).ToString();
                 foreach (var propertyName in hashProperties)
                 {
                     // Read the unhashed property
-                    var unhashed = type.GetProperty(propertyName).GetValue(entity).ToString();
+                    var unhashed = type.GetProperty(propertyName).GetValue(e).ToString();
 
-                    // Check if we have a salt stored for this value and hash the property
                     var existingSalt = _saltCache.Get(hashKey);
                     var hash = _hashAlgorithm.CreateHash(unhashed, existingSalt);
 
-                    // Add salt to cache
-                    if (existingSalt.IsNullOrEmpty())
-                    {
-                        _saltCache.Add(unhashed, hash.Salt);    //TODO: would be cleaner to have _saltCache.GetOrCreate(unhashed)
-                    }
-
                     // Set the hashed value onto the property and add the salt too
-                    type.GetProperty(propertyName).SetValue(entity, hash.Hash);
-                    type.GetProperty("Salt").SetValue(entity, hash.Salt);
+                    type.GetProperty(propertyName).SetValue(e, hash.Hash);
+                    type.GetProperty("Salt").SetValue(e, hash.Salt);
+                }
 
-                    //hashedEntities.Add(entity);
+                return e;
+            });
 
+            // Add salt to cache
+            foreach (var entity in hashedEntities)
+            {
+                var salt = type.GetProperty("Salt").GetValue(entity);
+                if (salt != null)
+                {
+                    _saltCache.TryAdd(entity.Word, salt.ToString());
                 }
             }
 

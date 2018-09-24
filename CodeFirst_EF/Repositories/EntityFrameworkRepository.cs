@@ -26,8 +26,10 @@ namespace CodeFirst_EF.Repositories
 
         public void Upsert<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity
         {
+            Console.WriteLine("Hash start");
             entities = _hashRepository.Hash(entities);
-
+            Console.WriteLine("Hash end");
+            Console.WriteLine("Upsert start");
             Upsert($"Tmp{typeof(TEntity).Name}s", $"p_MergeInto{typeof(TEntity).Name}s", entities);
         }
 

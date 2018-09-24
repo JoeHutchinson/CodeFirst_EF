@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using CodeFirst_EF.DTOs;
 using CodeFirst_EF.Security;
 using Moq;
@@ -19,7 +20,7 @@ namespace CodeFirst_EF.Tests.Security
             var mockSaltCache = new Mock<ISaltCache>();
             var savedSaltKey = "";
             var savedSaltValue = "";
-            mockSaltCache.Setup(s => s.Add(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>(
+            mockSaltCache.Setup(s => s.TryAdd(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>(
                 (key, value) =>
                 {
                     savedSaltKey = key;
@@ -32,19 +33,19 @@ namespace CodeFirst_EF.Tests.Security
 
             var sut = new HashRepository(mockHashProvider.Object, mockSaltCache.Object, true);
 
-            const string unhashedId = "unhashed";
-            var entity = new WordMetric(unhashedId, Root.Any.String(), Root.Any.Integer(), null);
+            const string unhashed = "unhashed";
+            var entity = new WordMetric(unhashed, unhashed, Root.Any.Integer(), null);
 
             var hashedEntities = sut.Hash(new[] {entity});
             var hashedEntity = hashedEntities.First();
 
-            Assert.IsFalse(unhashedId == hashedEntity.Id);
+            Assert.IsFalse(unhashed == hashedEntity.Id);
             Assert.AreEqual(hashResult.Hash, hashedEntity.Id);
 
             Assert.AreEqual(hashResult.Salt, hashedEntity.Salt);
 
             Assert.AreEqual(hashResult.Salt, savedSaltValue);
-            Assert.AreEqual(unhashedId, savedSaltKey);
+            Assert.AreEqual(unhashed, savedSaltKey);
         }
 
         [Test]

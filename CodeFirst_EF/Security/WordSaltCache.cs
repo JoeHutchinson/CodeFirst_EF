@@ -29,8 +29,13 @@ namespace CodeFirst_EF.Security
             _initialised = true;
         }
 
-        public void Add(string key, string value)
+        public void TryAdd(string key, string value)
         {
+            if (_lookup.ContainsKey(key))
+            {
+                return;
+            }
+
             _lookup.Add(key, value);
         }
 
@@ -44,7 +49,7 @@ namespace CodeFirst_EF.Security
     public interface ISaltCache
     {
         void Init(IRepository storageRepository);
-        void Add(string key, string value);
+        void TryAdd(string key, string value);
         string Get(string key);
     }
 
