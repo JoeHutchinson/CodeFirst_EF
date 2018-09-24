@@ -52,3 +52,5 @@ Project name CodeFirst_EF I'm using this as basis for a home project so doesn't 
 CodeFirst_EF is console project, I left it like this as it can be useful to run and see the basic flow without the UI, more to make mine and you life easier, wouldn't do this for a real project.
 
 ### How to run
+1. Need to create CountVonCountDB, I found EF sometimes has issues here so I've included a DB script to create the database and my mdf and log files. See GettingStarted folder, just drop the files into a path you can access update the script location and run, you should end with an empty DB called CountVonCountDB. This step may need to be repeated for the TestDB.
+2. Create a assymetric key on your SQL Server code by default expects column store key of CEK_Auto1. This can be done in a number of ways. The easiest I've found is just going to CountVonCountDB, creating a dummy table with a column, right clicking the table in Object Explorer and click Encrypt Columns, ensure you create a Deterministic type key but everything else can be default. Other way is using the powershell script CreateKeys.ps1 and supplying parameters for your environment.
